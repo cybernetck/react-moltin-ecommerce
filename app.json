@@ -1,10 +1,12 @@
 {
-  "name": "React-Moltin-eCommerce",
-  "description": "A barebones ReactJS App using the moltin API",
-  "repository": "https://github.com/matthew1809/react-moltin-ecommerce",
-  "logo": "https://node-js-sample.herokuapp.com/node.png",
-  "keywords": ["reactjs", "moltin", "ecommerce"],
-  "scripts": {
-    "postdeploy": "npm run build"
+  "name": "React Tutorial Server",
+  "description": "Code from the React tutorial",
+  "keywords": [ "react", "reactjs", "tutorial" ],
+  "repository": "https://github.com/matthew1809/react-moltin-ecommerce/tree/deploy",
+  "logo": "https://facebook.github.io/react/img/logo.svg",
+  "website": "http://facebook.github.io/react/docs/tutorial.html",
+  "success_url": "/",
+  "env" : {
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-nodejs.git"
   }
 }
