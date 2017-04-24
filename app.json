@@ -1,10 +1,10 @@
 {
-  "name": "React Tutorial Server",
+  "name": "Moltin + React example",
   "description": "Code from the React tutorial",
   "keywords": [ "react", "reactjs", "tutorial" ],
   "repository": "https://github.com/matthew1809/react-moltin-ecommerce/tree/deploy",
   "logo": "https://facebook.github.io/react/img/logo.svg",
-  "website": "http://facebook.github.io/react/docs/tutorial.html",
+  "website": "https://moltin.com",
   "success_url": "/",
     "scripts": {
       "postdeploy": "npm run build"
