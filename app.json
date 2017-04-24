@@ -7,6 +7,6 @@
   "website": "http://facebook.github.io/react/docs/tutorial.html",
   "success_url": "/",
     "scripts": {
-      "postdeploy": "npm start"
+      "postdeploy": "npm run build"
     }
 }
