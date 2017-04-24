@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.8.4"
   },
   "dependencies": {
+    "react-scripts": "0.8.4",
     "gulp": "^3.9.1",
     "lodash": "^4.17.3",
     "moltin": "^1.0.4",
