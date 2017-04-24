@@ -18,6 +18,9 @@ The current setup will minify all of the assets including JS and CSS files.
 1. `npm run build`
 2. Deploy the `/build` directory
 
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 ## TODOS
 - Remove the unused CSS framework modules
 - Organize the SCSS modules better

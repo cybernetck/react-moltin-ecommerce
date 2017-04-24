@@ -1,0 +1,10 @@
+{
+  "name": "React-Moltin-eCommerce",
+  "description": "A barebones ReactJS App using the moltin API",
+  "repository": "https://github.com/matthew1809/react-moltin-ecommerce",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["reactjs", "moltin", "ecommerce"],
+  "scripts": {
+    "postdeploy": "npm run build"
+  }
+}
