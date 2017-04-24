@@ -5,8 +5,8 @@
   "repository": "https://github.com/matthew1809/react-moltin-ecommerce/tree/deploy",
   "logo": "https://facebook.github.io/react/img/logo.svg",
   "website": "http://facebook.github.io/react/docs/tutorial.html",
-  "success_url": "/", 
+  "success_url": "/",
     "scripts": {
-      "postdeploy": "bundle exec rake bootstrap"
+      "postdeploy": "npm start"
     }
 }
