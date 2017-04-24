@@ -1,5 +1,8 @@
 React Moltin Ecommerce is an app demonstrating the usage of Moltin Javascript API and React
 
+## Deploy to heroku - you will need a Heroku account
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 ## How to run the app
 1. Make sure you have [Create React App](https://github.com/facebookincubator/create-react-app) installed on your system
 2. Clone the repository
@@ -17,6 +20,7 @@ The current setup will minify all of the assets including JS and CSS files.
 ## How to build the project for production
 1. `npm run build`
 2. Deploy the `/build` directory
+
 
 ## TODOS
 - Remove the unused CSS framework modules
