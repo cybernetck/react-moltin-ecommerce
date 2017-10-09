@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import ProductList from './ProductList';
-import Cover from './Cover'
+import Cover from './Cover';
 
-class Home extends React.Component {
+class Home extends Component {
 	state = {
 		data: [],
 		loaded: false
 	};
 
 	componentDidMount() {
+
 		let _this = this;
-		moltin.Authenticate(function() {
 			_this.setState({
-				data: moltin.Product.List()
+				data: Moltin.Products.All()
 			});
-		});
 	}
 
 	render() {
+		console.log(this.state.data)
 		return (
 			<div className="home-intro">
 				<Cover/>

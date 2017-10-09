@@ -1,6 +1,6 @@
 import React from 'react';
 import events from '../vendor/pub-sub';
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import _ from 'lodash/object';
 import {Link} from 'react-router';
 import LoadingIcon from '../../public/ripple.svg';
@@ -24,8 +24,7 @@ export default class SidebarCart extends React.Component {
 		let _this = this;
 
 		// Initial content load of the cart content
-		moltin.Authenticate(function () {
-			moltin.Cart.Contents(function(items) {
+			Moltin.Cart.Contents(function(items) {
 				events.publish('CART_UPDATED', {
 					cart: items // any argument
 				});
@@ -36,7 +35,6 @@ export default class SidebarCart extends React.Component {
 			}, function(error) {
 				// Something went wrong...
 			});
-		});
 
 		// Listen to theCART_UPDATED event. Once it happens, take the object from the
 		// published event and pass it to the currentCart state
@@ -53,8 +51,7 @@ export default class SidebarCart extends React.Component {
 			});
 
 			// Once it fires, get the latest cart content data
-			moltin.Authenticate(function () {
-				moltin.Cart.Contents(function(items) {
+				Moltin.Cart.Contents(function(items) {
 
 					// Pass the new cart content to CART_UPDATED event
 					events.publish('CART_UPDATED', {
@@ -68,7 +65,6 @@ export default class SidebarCart extends React.Component {
 					// Something went wrong...
 				});
 			});
-		});
 	}
 
 	render() {
@@ -84,10 +80,10 @@ export default class SidebarCart extends React.Component {
 							{
 								(result.featured_small)
 									// If we have an image set
-									? <img src={result.featured_small.data.url.https} />
+									? <img src={result.featured_small.data.url.https} alt="featured" />
 
 									//else put some placeholder
-									: <img src="http://placehold.it/300x380" />
+									: <img src="http://placehold.it/300x380" alt="featured placeholder" />
 							}
 						</div>
 						<div className="content">

@@ -2,7 +2,7 @@ import React from 'react';
 import moltin from '../vendor/moltin';
 import {Link} from 'react-router';
 import LoadingIcon from '../../public/ripple.svg';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+//import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import AddToCartButton from '../components/AddToCartButton';
 import config from '../vendor/config'
 

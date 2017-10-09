@@ -5,7 +5,7 @@ import Header from './Header';
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 
-class Layout extends React.Component {
+class Layout extends Component {
 
 	render() {
 		return (

@@ -18,10 +18,10 @@ export default class Spotlight extends React.Component {
 							{
 								(result.featured_small)
 									// If we have an image set
-									? <img src={result.featured_small.data.url.https} />
+									? <img src={result.featured_small.data.url.https} role="presentation"/>
 
 									//put some placeholder
-									: <img src="http://placehold.it/300x380" />
+									: <img src="http://placehold.it/300x380" role="presentation" />
 							}
 
 

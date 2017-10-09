@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import moltin from '../vendor/moltin';
+//import Moltin from '../vendor/moltin';
 import PaymentForm from '../components/PaymentForm'
 import CartDetails from '../components/CartDetails'
 
-export default class Checkout extends React.Component {
+export default class Checkout extends Component {
 	render() {
 
 		return (

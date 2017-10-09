@@ -5,7 +5,7 @@ import moltin from '../vendor/moltin';
 import LoadingIcon from '../../public/ripple.svg';
 import {Link} from 'react-router';
 
-export default class CartDetails extends React.Component {
+export default class CartDetails extends Component {
 	state = {
 		currentCart : {
 			total_items: 0,
@@ -83,10 +83,10 @@ export default class CartDetails extends React.Component {
 							{
 								(result.featured_small)
 									// If we have an image set
-									? <img src={result.featured_small.data.url.https} />
+									? <img src={result.featured_small.data.url.https} role="presentation" />
 
 									//else put some placeholder
-									: <img src="http://placehold.it/300x380" />
+									: <img src="http://placehold.it/300x380" role="presentation" />
 							}
 						</div>
 						<div className="content">
