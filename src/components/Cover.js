@@ -38,21 +38,36 @@ export default class Cover extends React.Component {
 				_this.setState({
 					products : products.data, // all the products from the category
 					files : products.included.files,
+					main_images: products.included.main_images,
 					lastProduct: products.data[products.data.length - 1], // since we display only one item, let's take the newest one
 					featuredAcquired: true // The featured product is loaded
 				});
 			}).catch((e) => {
 				console.log(e);
 			})	
+
 	}
 
 	render() {
 		
-		let backgroundImage;
+		let backgroundImage;	
+		let file;
+		let fileId;
 
 		if(this.props.products) {
+
+			var isThereAMainImage = (product) => {
+		      fileId = this.state.lastProduct.relationships.main_image.data.id;
+		      
+		      file = this.state.main_images.find(function (el) {
+		        return fileId === el.id
+		      })
+
+		      return file.link.href || 'https://placeholdit.imgix.net/~text?txtsize=69&txt=824%C3%971050&w=824&h=1050';
+		    };
+
 			backgroundImage = {
-				backgroundImage: 'url(' + this.props.files[0].link.href + ')',
+				backgroundImage: 'url(' + isThereAMainImage(this.state.lastProduct) + ')',
 			};
 		}
 
@@ -62,7 +77,7 @@ export default class Cover extends React.Component {
 					<img src={LoadingIcon} alt="Loading"/>
 				</div>
 				<div className="cover-inner">
-					<div className="content">
+					<div className="content" style={{"width": 1200}}>
 						<div className="inner">
 							<h1>{this.state.lastProduct.name}</h1>
 							<p>{this.state.lastProduct.description}</p>
