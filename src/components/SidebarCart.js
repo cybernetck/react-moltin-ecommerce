@@ -8,7 +8,7 @@ import LoadingIcon from '../../public/ripple.svg';
 export default class SidebarCart extends React.Component {
 	
 	state = {
-		quant: 0,
+		quantity: 0,
 		currentCart : {
 			data: {},
 			meta : {
@@ -41,11 +41,8 @@ export default class SidebarCart extends React.Component {
 				});
 
 				_this.setState({
-					currentCart: items
-				})
-
-      			_this.setState({
-					quant: quantity
+					currentCart: items,
+					total: quantity
 				})
 
 		}).catch((e) => {
@@ -55,8 +52,10 @@ export default class SidebarCart extends React.Component {
 		// Listen to theCART_UPDATED event. Once it happens, take the object from the
 		// published event and pass it to the currentCart state
 		events.subscribe('CART_UPDATED', function(obj) {
+			console.log(obj)
 			_this.setState({
-				currentCart: obj.cart
+				currentCart: obj.cart,
+				quantity: obj.total
 			});
 		});
 
@@ -97,7 +96,7 @@ export default class SidebarCart extends React.Component {
 		let preparedCartContent;
 		let cartContent = _.values(this.state.currentCart.contents);
 		// If the cart is not empty, display the cart items
-		if (this.state.quant >= 1) {
+		if (this.state.quantity >= 1) {
 			preparedCartContent = cartContent.map((result, id) => {
 				return(
 					<div className="item" key={id}>

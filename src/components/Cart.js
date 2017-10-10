@@ -14,7 +14,6 @@ export default class Cart extends React.Component {
 
 		// Listen to the CART_UPDATED event, and update the header cart content accordingly
 		events.subscribe('CART_UPDATED', function(obj) {
-			console.log(obj)
 			_this.setState({
 				currentCart: {
 					total_items: obj.total

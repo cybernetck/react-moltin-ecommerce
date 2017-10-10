@@ -11,11 +11,7 @@ export default class Product extends React.Component {
 	state = {
 		id: this.props.location.pathname.replace('/product/', ''), // remove string '/product/' from the url and use the id only
 		loaded: false,
-		images: [
-				{
-					url: ''
-				}
-			],
+		images: [],
 		product: {
 
 			data: {
@@ -36,7 +32,7 @@ export default class Product extends React.Component {
 	componentDidMount() {
 		let _this = this;
 
-		Moltin.Products.Get(_this.state.id).then((product) => {
+		Moltin.Products.With(['files']).Get(_this.state.id).then((product) => {
   			_this.setState({
   				product: product
   			})
@@ -47,7 +43,7 @@ export default class Product extends React.Component {
 
 
 	render() {
-			console.log(this.state);
+			
 		//initialize an empty gallery array.
 		const gallery = [];
 		let _this = this;
