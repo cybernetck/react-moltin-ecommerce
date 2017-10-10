@@ -1,5 +1,5 @@
 import React from 'react'
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import events from '../vendor/pub-sub'
 
 
@@ -10,7 +10,6 @@ export default class AddToCart extends React.Component {
 
 	addToCart = (clicked) => {
 		let _this = this;
-
 		// Fire ADD_TO_CART immediately after user initiate the action
 		events.publish('ADD_TO_CART', {
 			adding: true
@@ -21,8 +20,7 @@ export default class AddToCart extends React.Component {
 			adding: true
 		});
 
-		moltin.Authenticate(function() {
-			moltin.Cart.Insert(clicked, '1', null, function(cart) {
+			Moltin.Cart.AddProduct(clicked, 1).then((cart) => {
 
 				// Inform other listeners that ADD_TO_CART event is complete
 				events.publish('ADD_TO_CART', {
@@ -34,13 +32,13 @@ export default class AddToCart extends React.Component {
 					adding: false
 				})
 
-			}, function(error) {
+
+			}).catch((e) => {
 				_this.setState({
 					adding: false
 				})
-				console.log(error);
-			});
-		});
+				console.log(e);
+			})
 	};
 
 

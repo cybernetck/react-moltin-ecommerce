@@ -1,5 +1,5 @@
 import React from 'react'
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import ImageGallery from 'react-image-gallery';
 import _ from 'lodash'
 //import LoadingIcon from '../../public/ripple.svg';
@@ -11,16 +11,24 @@ export default class Product extends React.Component {
 	state = {
 		id: this.props.location.pathname.replace('/product/', ''), // remove string '/product/' from the url and use the id only
 		loaded: false,
-		product: {
-			images: [
+		images: [
 				{
 					url: ''
 				}
 			],
+		product: {
 
-			price: {
-				value: ''
-			}
+			data: {
+				name: null,
+				description: null,
+				meta: {
+					display_price: {
+						with_tax: {
+							formatted: null
+						}
+					}
+				}
+			},
 		},
 		galleryLoaded: false
 	};
@@ -28,23 +36,27 @@ export default class Product extends React.Component {
 	componentDidMount() {
 		let _this = this;
 
-		moltin.Authenticate(function() {
-			_this.setState({
-				product: moltin.Product.Get(_this.state.id),
-			});
-		});
+		Moltin.Products.Get(_this.state.id).then((product) => {
+  			_this.setState({
+  				product: product
+  			})
+  		}).catch((e) => {
+  			console.log(e);
+  		});
 	}
 
+
 	render() {
+			console.log(this.state);
 		//initialize an empty gallery array.
 		const gallery = [];
 		let _this = this;
 
 		// If we have images uploaded
-		if (this.state.product.images.length >= 1 ) {
+		if (this.state.images.length >= 1 ) {
 			let index = 0;
 
-			_.forEach(this.state.product.images, function(value) {
+			_.forEach(this.state.images, function(value) {
 				gallery[index] = {
 					original: value.url.https,
 					thumbnail: value.url.https
@@ -52,7 +64,7 @@ export default class Product extends React.Component {
 				index++;
 
 				// If the gallery is completely loaded
-				if (index === _this.state.product.images.length) {
+				if (index === _this.state.images.length) {
 					_this.state.galleryLoaded = true;
 				}
 			});
@@ -89,8 +101,8 @@ export default class Product extends React.Component {
 						</div>
 						<div className="six wide column">
 							<div className="product-details">
-								<h1>{this.state.product.title} <span className="price">{this.state.product.price.value}</span></h1>
-								<AddToCartButton additionalClass="fluid ui button" productId={this.state.product.id}/>
+								<h1>{this.state.product.data.name} <span className="price">{this.state.product.data.meta.display_price.with_tax.formatted}</span></h1>
+								<AddToCartButton additionalClass="fluid ui button" productId={this.state.product.data.id}/>
 
 								<Accordion styled defaultActiveIndex={0}>
 									<Accordion.Title>
@@ -99,7 +111,7 @@ export default class Product extends React.Component {
 									</Accordion.Title>
 									<Accordion.Content>
 										<p>
-											{this.state.product.description}
+											{this.state.product.data.description}
 										</p>
 									</Accordion.Content>
 									<Accordion.Title>

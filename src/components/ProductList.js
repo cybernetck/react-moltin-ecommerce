@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
-import AddToCartButton from '../components/AddToCartButton'
+import AddToCartButton from '../components/AddToCartButton';
+import ProductImage from '../components/ProductImage';
 
 export default class Spotlight extends React.Component {
 	state = {
@@ -10,21 +11,13 @@ export default class Spotlight extends React.Component {
 
 	render() {
 		// Create allItems function from the props we get from Home component
-		let allItems = this.props.products.map((result, id) => {
+		let allItems = this.props.products.data.map((result, id) => {
 			return (
 				<div key={id} className="column product-list-element">
 					<div className="ui card" key={id}>
 						<div className="image">
-							{
-								(result.featured_small)
-									// If we have an image set
-									? <img src={result.featured_small.data.url.https} role="presentation"/>
-
-									//put some placeholder
-									: <img src="http://placehold.it/300x380" role="presentation" />
-							}
-
-
+							<ProductImage product={result} products={this.props.products}/>
+							
 							<div className="extra content">
 								<div className="buttons-container">
 									<AddToCartButton productId={result.id} additionalClass="inverted"/>
@@ -33,7 +26,7 @@ export default class Spotlight extends React.Component {
 							</div>
 						</div>
 						<div className="content">
-							<span className="header">{result.title}</span>
+							<span className="header">{result.name}</span>
 							<span className="sub">Collection Name</span>
 							<div className="price">
 								<span>{result.price.value}</span>

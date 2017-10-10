@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import { Button, Modal } from 'semantic-ui-react';
 import {Link} from 'react-router';
 import events from '../vendor/pub-sub';
@@ -43,42 +43,45 @@ export default class FormExampleOnSubmit extends Component {
 	handleSubmit = (event) =>{
 		let _this = this;
 
-		moltin.Authenticate(() => {
-			let _this = this;
+
 			this.setState({
 				cartPreparing: true,
 			});
 
-			moltin.Cart.Complete({
+		Moltin.Cart.Checkout({
 				customer: {
-					first_name: _this.state.firstName,
-					last_name:  _this.state.lastName,
+					name: _this.state.firstName + ' ' + _this.state.lastName,
 					email:      _this.state.email,
 				},
-				shipping: '1456721508712841263', // hardcoded shipping method. TODO: allow user to select a shipping method
 				gateway: 'stripe', // hardcoded payment method. TODO: allow user to select a payment method
-				bill_to: {
+				billing_address: {
 					first_name: _this.state.firstName,
 					last_name:  _this.state.lastName,
-					address_1:  _this.state.streetAddress,
+					line_1:  _this.state.streetAddress,
 					city:       _this.state.city,
 					county:     'California',
 					country:    _this.state.country,
-					postcode:   _this.state.zipCode,
-					phone:      _this.state.phoneNumber
+					postcode:   _this.state.zipCode
 				},
-				ship_to: 'bill_to',
-			}, function(order) {
+				shipping_address: {
+					first_name: _this.state.firstName,
+					last_name:  _this.state.lastName,
+					line_1:  _this.state.streetAddress,
+					city:       _this.state.city,
+					county:     'California',
+					country:    _this.state.country,
+					postcode:   _this.state.zipCode
+				},
+			}).then((order) => {
 				_this.setState({
 					open: true,
 					cartPreparing: false,
-					cartId: order.id
+					cartId: order.data.id
 				});
+			}).catch((e) => {
+				console.log(e);
+			})
 
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
 		event.preventDefault();
 	};
 
@@ -88,17 +91,17 @@ export default class FormExampleOnSubmit extends Component {
 			processingPayment: true,
 		});
 
-		moltin.Authenticate(() => {
-			moltin.Checkout.Payment('purchase', this.state.cartId, {
-				data: {
+			Moltin.Orders.Payment(this.state.cartId, {
+					gateway: 	  'stripe',
+					method: 	  'purchase',
 					first_name:   this.state.firstName,
 					last_name:    this.state.lastName,
 					number:       this.state.cardNumber,
-					expiry_month: this.state.expiryMonth,
-					expiry_year:  this.state.expiryYear,
-					cvv:          this.state.cvv
-				}
-			}, function(payment) {
+					month: 	  	  this.state.expiryMonth,
+					year:  		  this.state.expiryYear,
+					verification_value: this.state.cvv
+			})
+			.then(() => {
 
 				// Reset the input values
 				_this.setState({
@@ -112,10 +115,12 @@ export default class FormExampleOnSubmit extends Component {
 					cvv: ''
 				})
 
-				moltin.Cart.Delete(function() {
-					// Clear the cart once the payment is successful
-					//TODO: pass the cart object manually without the API call
-					moltin.Cart.Contents(function(items) {
+				Moltin.Cart.Delete()
+
+				.then((res) => {
+						//TODO: pass the cart object manually without the API call
+					Moltin.Cart.Items()
+					.then((items) => {
 						events.publish('CART_UPDATED', {
 							cart: items // any argument
 						});
@@ -123,16 +128,13 @@ export default class FormExampleOnSubmit extends Component {
 						_this.setState({
 							currentCart: items
 						})
-					}, function(error) {
-						// Something went wrong...
 					});
-				}, function(error) {
-					// Something went wrong...
-				});
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
+				}).catch((e) => {
+					console.log(e);
+				})
+			}).catch((e) => {
+				console.log(e);
+			})
 	};
 
 	render() {

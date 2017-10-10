@@ -7,7 +7,6 @@
     "@moltin/sdk": "^2.8.0",
     "gulp": "^3.9.1",
     "lodash": "^4.17.3",
-    "moltin": "^1.0.4",
     "prop-types": "^15.5.10",
     "react": "^15.4.1",
     "react-addons-css-transition-group": "^15.4.2",

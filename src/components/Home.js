@@ -5,26 +5,43 @@ import Cover from './Cover';
 
 class Home extends Component {
 	state = {
-		data: [],
+		products: null,
+		files: null,
 		loaded: false
 	};
 
 	componentDidMount() {
 
 		let _this = this;
+		Moltin.Products.With(['files']).All()
+
+		.then((products) => {
 			_this.setState({
-				data: Moltin.Products.All()
+				products: products,
+				files: products.included.files
 			});
+
+		}).catch((e) => {
+			console.log(e);
+		})
+		
 	}
 
 	render() {
-		console.log(this.state.data)
-		return (
-			<div className="home-intro">
-				<Cover/>
-				<ProductList products={this.state.data}/>
-			</div>
-		);
+		if(this.state.products !== null) {
+			return (
+				<div className="home-intro">
+					<Cover products={this.state.products} files={this.state.files} lastProduct={this.state.products.data[this.state.products.data.length - 1]}/>
+					<ProductList products={this.state.products}/>
+				</div>
+			)
+		} else {
+			return (
+				<div className="home-intro">
+					<Cover/>
+				</div>
+				)
+		}
 	}
 }
 

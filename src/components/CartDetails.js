@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import events from '../vendor/pub-sub';
 import _ from 'lodash/object';
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import LoadingIcon from '../../public/ripple.svg';
 import {Link} from 'react-router';
 
 export default class CartDetails extends Component {
 	state = {
+		total: null,
 		currentCart : {
-			total_items: 0,
-			contents: {},
-			totals : {
-				post_discount : {
-					formatted : {
-						with_tax: null
+			data: {},
+			meta : {
+				display_price : {
+					with_tax : {
+						formatted: null
 					}
  				}
 			}
@@ -24,20 +24,27 @@ export default class CartDetails extends Component {
 
 	componentDidMount() {
 		let _this = this;
-		moltin.Authenticate(function () {
-			moltin.Cart.Contents(function(items) {
-				events.publish('CART_UPDATED', {
-					cart: items // any argument
-				});
+				Moltin.Cart.Items().then((items) => {
 
-				_this.setState({
-					currentCart: items,
-					loaded: true
-				})
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
+					var quantity = 0;
+
+	      			items.data.forEach(function(item) {
+	        		quantity += item.quantity;
+	      			})
+
+					events.publish('CART_UPDATED', {
+						cart: items, // any argument
+						total: quantity
+					});
+
+					_this.setState({
+						total: quantity,
+						currentCart: items,
+						loaded: true
+					})
+				}).catch((e) => {
+					console.log(e);
+				});
 	}
 
 	removeFromCart(clicked) {
@@ -46,37 +53,40 @@ export default class CartDetails extends Component {
 			removing: true
 		});
 
-		moltin.Authenticate(function () {
-			moltin.Cart.Remove(clicked, function() {
-				moltin.Cart.Contents(function(items) {
-					events.publish('CART_UPDATED', {
-						cart: items // any argument
+		Moltin.Cart.RemoveItem(clicked)
+		.then((items) => {
+
+			var quantity = 0;
+
+  			items.data.forEach(function(item) {
+    		quantity += item.quantity;
+  			})
+
+			events.publish('CART_UPDATED', {
+						cart: items, // any argument
+						total: quantity
 					});
 
 					_this.setState({
 						currentCart: items,
+						total: quantity,
 						loaded: true,
 						removing: false
 					})
-				}, function(error) {
-					// Something went wrong...
-				});
-
-				console.log('item removed', clicked)
-			}, function(error) {
-				// Something went wrong...
-			});
-		});
-	}
+		}).catch((e) => {
+			console.log(e);
+		})
+	};
 
 	render() {
 		let preparedCartContent;
-		let cartContent = _.values(this.state.currentCart.contents);
-		console.log(this.state.currentCart);
+		let cartContent = this.state.currentCart.data;
+		console.log(cartContent);
 
 		// If the cart is not empty, display the cart items
-		if (this.state.currentCart.total_items >= 1) {
+		if (this.state.total >= 1) {
 			preparedCartContent = cartContent.map((result, id) => {
+				console.log(result)
 				return(
 					<div className="item" key={id}>
 						<div className="ui tiny image">
@@ -92,7 +102,7 @@ export default class CartDetails extends Component {
 						<div className="content">
 							<Link to={`/product/${result.id}`}>
 								<span className="header">{result.name} <br/>
-								<span className="price">{result.pricing.formatted.with_tax}</span>
+								<span className="price">{result.meta.display_price.with_tax.formatted}</span>
 							</span>
 							</Link>
 						</div>
@@ -124,7 +134,7 @@ export default class CartDetails extends Component {
 
 					<div className="total">
 						<span className="text">TOTAL: </span>
-						<span className="price">{this.state.currentCart.totals.post_discount.formatted.with_tax}</span>
+						<span className="price">{this.state.currentCart.meta.display_price.with_tax.formatted}</span>
 					</div>
 				</div>
 			</div>

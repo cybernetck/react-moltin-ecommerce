@@ -6,13 +6,15 @@ import {Link} from 'react-router';
 import LoadingIcon from '../../public/ripple.svg';
 
 export default class SidebarCart extends React.Component {
+	
 	state = {
+		quant: 0,
 		currentCart : {
-			total_items: 0,
-			totals : {
-				post_discount : {
-					formatted : {
-						with_tax: null
+			data: {},
+			meta : {
+				display_price : {
+					with_tax : {
+						formatted: null
 					}
 				}
 			}
@@ -24,17 +26,31 @@ export default class SidebarCart extends React.Component {
 		let _this = this;
 
 		// Initial content load of the cart content
-			Moltin.Cart.Contents(function(items) {
+		Moltin.Cart.Items()
+			.then((items) => {
+
+				var quantity = 0;
+
+      			items.data.forEach(function(item) {
+        		quantity += item.quantity;
+      			})
+
 				events.publish('CART_UPDATED', {
-					cart: items // any argument
+					cart: items, // any argument
+					total: quantity
 				});
 
 				_this.setState({
 					currentCart: items
 				})
-			}, function(error) {
-				// Something went wrong...
-			});
+
+      			_this.setState({
+					quant: quantity
+				})
+
+		}).catch((e) => {
+			console.log(e);
+		})
 
 		// Listen to theCART_UPDATED event. Once it happens, take the object from the
 		// published event and pass it to the currentCart state
@@ -51,28 +67,37 @@ export default class SidebarCart extends React.Component {
 			});
 
 			// Once it fires, get the latest cart content data
-				Moltin.Cart.Contents(function(items) {
+				Moltin.Cart.Items()
 
-					// Pass the new cart content to CART_UPDATED event
+				.then((items) => {
+
+					var quantity = 0;
+
+	      			items.data.forEach(function(item) {
+	        		quantity += item.quantity;
+	      			})
+									// Pass the new cart content to CART_UPDATED event
 					events.publish('CART_UPDATED', {
-						cart: items
+						cart: items,
+						total: quantity
 					});
 
 					_this.setState({
 						currentCart: items
 					})
-				}, function(error) {
-					// Something went wrong...
-				});
-			});
+					console.log(_this.state)
+				}).catch((e) => {
+					console.log(e)
+				})
+			})
 	}
 
 	render() {
+
 		let preparedCartContent;
 		let cartContent = _.values(this.state.currentCart.contents);
-
 		// If the cart is not empty, display the cart items
-		if (this.state.currentCart.total_items >= 1) {
+		if (this.state.quant >= 1) {
 			preparedCartContent = cartContent.map((result, id) => {
 				return(
 					<div className="item" key={id}>
@@ -105,9 +130,9 @@ export default class SidebarCart extends React.Component {
 
 		return (
 			<div className="sidebar-cart sidebar-element">
-				<h4>In Cart: <span className="price">{this.state.currentCart.totals.post_discount.formatted.with_tax}</span></h4>
+				<h4>In Cart: <span className="price">{this.state.currentCart.meta.display_price.with_tax.formatted}</span></h4>
 				{/*// If the cart is not empty, add 'active' class to it*/}
-				<Link to="/checkout" className={`ui checkout button tiny ${this.state.currentCart.total_items >= 1 ? 'active': ''}`}>
+				<Link to="/checkout" className={`ui checkout button tiny ${this.state.quant >= 1 ? 'active': ''}`}>
 					<i className="paypal icon"></i>Checkout</Link>
 				<div className="ui items">
 					{preparedCartContent}

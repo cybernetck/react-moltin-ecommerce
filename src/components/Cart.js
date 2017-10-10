@@ -14,15 +14,17 @@ export default class Cart extends React.Component {
 
 		// Listen to the CART_UPDATED event, and update the header cart content accordingly
 		events.subscribe('CART_UPDATED', function(obj) {
+			console.log(obj)
 			_this.setState({
 				currentCart: {
-					total_items: obj.cart.total_items
+					total_items: obj.total
 				}
 			})
 		});
 	}
 
 	render() {
+		console.log(this.state.currentCart.total_items)
 		return (
 			<Link to="/checkout" className={`item ui right cart-item floated ${this.state.currentCart.total_items >= 1 ? 'green' : ''}`}>
 				<span>{this.state.currentCart.total_items}</span>

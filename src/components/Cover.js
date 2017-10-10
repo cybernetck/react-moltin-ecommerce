@@ -1,5 +1,5 @@
 import React from 'react';
-import moltin from '../vendor/moltin';
+import { Moltin } from '../vendor/moltin';
 import {Link} from 'react-router';
 import LoadingIcon from '../../public/ripple.svg';
 //import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -9,6 +9,7 @@ import config from '../vendor/config'
 export default class Cover extends React.Component {
 	state = {
 		products: null,
+		files: null,
 		lastProduct : {
 			featured_large : {
 				value: '',
@@ -32,24 +33,28 @@ export default class Cover extends React.Component {
 		let _this = this;
 
 		// Get the featured product
-		moltin.Authenticate(() => {
-			moltin.Product.Search({category: _this.state.featured_category, status: '1'}, function(products) {
+			Moltin.Products.With(['files']).All()
+			.then ((products) => {
 				_this.setState({
-					products : products, // all the products from the category
-					lastProduct: products[products.length - 1], // since we display only one item, let's take the newest one
+					products : products.data, // all the products from the category
+					files : products.included.files,
+					lastProduct: products.data[products.data.length - 1], // since we display only one item, let's take the newest one
 					featuredAcquired: true // The featured product is loaded
 				});
-			}, function(error) {
-				// Something went wrong...
-			});
-		})
+			}).catch((e) => {
+				console.log(e);
+			})	
 	}
 
 	render() {
+		
+		let backgroundImage;
 
-		const backgroundImage = {
-			backgroundImage: 'url(' + this.state.lastProduct.featured_large.data.url.https + ')',
-		};
+		if(this.props.products) {
+			backgroundImage = {
+				backgroundImage: 'url(' + this.props.files[0].link.href + ')',
+			};
+		}
 
 		return (
 			<div className="cover" style={backgroundImage}>
@@ -59,7 +64,7 @@ export default class Cover extends React.Component {
 				<div className="cover-inner">
 					<div className="content">
 						<div className="inner">
-							<h1>{this.state.lastProduct.title}</h1>
+							<h1>{this.state.lastProduct.name}</h1>
 							<p>{this.state.lastProduct.description}</p>
 							<span className="price">
 							{this.state.lastProduct.price.value}
