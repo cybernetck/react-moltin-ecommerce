@@ -2,7 +2,7 @@
   "name": "Moltin + React example",
   "description": "Code from the React tutorial",
   "keywords": [ "react", "reactjs", "tutorial" ],
-  "repository": "https://github.com/matthew1809/react-moltin-ecommerce/tree/deploy",
+  "repository": "https://github.com/matthew1809/react-moltin-ecommerce/tree/v2",
   "logo": "https://facebook.github.io/react/img/logo.svg",
   "website": "https://moltin.com",
   "buildpacks": [

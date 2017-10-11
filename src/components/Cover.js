@@ -11,6 +11,7 @@ export default class Cover extends React.Component {
 		products: null,
 		files: null,
 		lastProduct : {
+			present: null,
 			featured_large : {
 				value: '',
 				data : {
@@ -54,7 +55,7 @@ export default class Cover extends React.Component {
 		let file;
 		let fileId;
 
-		if(this.props.products) {
+		if(this.props.products && this.state.lastProduct.present !== null) {
 
 			var isThereAMainImage = (product) => {
 		      fileId = this.state.lastProduct.relationships.main_image.data.id;
