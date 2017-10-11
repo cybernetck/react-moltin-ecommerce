@@ -19,11 +19,24 @@ export default class CartDetails extends Component {
 			}
 		},
 		loaded: false,
-		removing: false
+		removing: false,
+		products: {
+			data: null
+		}
 	};
 
 	componentDidMount() {
 		let _this = this;
+
+			Moltin.Products.With(['files']).All()
+			.then((products) => {
+			  	_this.setState({
+			  		products: products
+			  	})
+			 }).catch((e) => {
+			  	console.log(e);
+			  });
+
 				Moltin.Cart.Items().then((items) => {
 
 					var quantity = 0;
@@ -81,22 +94,39 @@ export default class CartDetails extends Component {
 	render() {
 		let preparedCartContent;
 		let cartContent = this.state.currentCart.data;
-		console.log(cartContent);
+
+		var findProduct = (Productid, products) => {
+
+			let product;
+			let productData = products.data;
+			let fileId;
+			let file;
+
+			product = productData.find(function (el) {
+        		return Productid === el.id;
+      		})
+
+      		fileId = product.relationships.main_image.data.id;
+
+      		file = this.state.products.included.main_images.find(function (el) {
+         		return fileId === el.id
+       	 	});
+
+      		return <img src={file.link.href} role="presentation" />  || <img src='https://placeholdit.imgix.net/~text?txtsize=69&txt=824%C3%971050&w=824&h=1050' role="presentation" />
+		}
+
 
 		// If the cart is not empty, display the cart items
-		if (this.state.total >= 1) {
+		if (this.state.total >= 1 && this.state.products.data !== null) {
 			preparedCartContent = cartContent.map((result, id) => {
-				console.log(result)
+
 				return(
 					<div className="item" key={id}>
 						<div className="ui tiny image">
 							{
-								(result.featured_small)
-									// If we have an image set
-									? <img src={result.featured_small.data.url.https} role="presentation" />
+	
+								findProduct(result.product_id, this.state.products)
 
-									//else put some placeholder
-									: <img src="http://placehold.it/300x380" role="presentation" />
 							}
 						</div>
 						<div className="content">

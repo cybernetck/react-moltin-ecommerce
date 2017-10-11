@@ -13,7 +13,6 @@ export default class Product extends React.Component {
 		loaded: false,
 		images: [],
 		product: {
-
 			data: {
 				name: null,
 				description: null,
@@ -43,7 +42,27 @@ export default class Product extends React.Component {
 
 
 	render() {
-			
+
+		let file;
+		let fileId;
+
+		 var isThereAMainImage = (product) => {
+
+      		fileId = product.data.relationships.main_image.data.id;
+      
+      		file = product.included.main_images.find(function (el) {
+        		return fileId === el.id
+      		})
+
+      		return file.link.href || 'https://placeholdit.imgix.net/~text?txtsize=69&txt=824%C3%971050&w=824&h=1050'
+    	};
+
+    	if(this.state.product.data.name !== null) {
+			this.state.images.push(isThereAMainImage(this.state.product))
+		}
+
+
+		//console.log(isThereAMainImage(this.state.product))
 		//initialize an empty gallery array.
 		const gallery = [];
 		let _this = this;
@@ -54,8 +73,8 @@ export default class Product extends React.Component {
 
 			_.forEach(this.state.images, function(value) {
 				gallery[index] = {
-					original: value.url.https,
-					thumbnail: value.url.https
+					original: value,
+					thumbnail: value
 				};
 				index++;
 
@@ -71,8 +90,7 @@ export default class Product extends React.Component {
 				original: 'https://placehold.it/1000x1000',
 				thumbnail: 'https://placehold.it/100x100'
 			}
-		}
-
+		};
 
 		return (
 			<div className="product-container">

@@ -86,7 +86,7 @@ export default class Cover extends React.Component {
 						</span>
 
 							<AddToCartButton additionalClass="inverted" productId={this.state.lastProduct.id}/>
-							<Link className="ui inverted button" to={`/product/${this.state.lastProduct.id}`}>Details</Link>
+							<Link className="ui inverted button" to={`/product/${this.state.lastProduct.id}`} >Details</Link>
 						</div>
 					</div>
 				</div>

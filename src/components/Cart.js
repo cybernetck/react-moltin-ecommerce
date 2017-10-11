@@ -23,7 +23,6 @@ export default class Cart extends React.Component {
 	}
 
 	render() {
-		console.log(this.state.currentCart.total_items)
 		return (
 			<Link to="/checkout" className={`item ui right cart-item floated ${this.state.currentCart.total_items >= 1 ? 'green' : ''}`}>
 				<span>{this.state.currentCart.total_items}</span>
